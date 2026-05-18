@@ -17,18 +17,21 @@ const MOCK_PERFUMES = [
   { id: 8, name: "TIYUNO", price: "300,00€", image: "/images/perfume8.png" },
 ];
 
-interface ProductDetailsProps {
-  isOpen: boolean;
-  onClose: () => void;
-  product: any; // Redha 'any' ghir bsh ndozo l-build blati machakil d type strict
-}
-
 export default function ProductGrid() {
-  const [selectedProduct, setSelectedProduct] = useState<PerfumeType | null>(null);
+  // Redna useState t-9bel 'any' bsh n-hniw rwsna mn machakil d TypeScript
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // L-fonction li kat-ft7 l-details dyal l-parfum li t-clika 3lih
+  const handleOpenDetails = (product: any) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
 
   return (
     <section className="w-full bg-white px-4 md:px-12 py-8 md:py-12">
+      
+      {/* 1. Bar dyal l-Filtrage */}
       <div className="flex items-center justify-between border-b border-stone-100 pb-3 mb-6 md:mb-8">
         <div className="flex items-center space-x-1 text-[11px] md:text-xs tracking-wide text-stone-800">
           <span className="font-medium">Parfums masculins</span>
@@ -40,13 +43,25 @@ export default function ProductGrid() {
         </button>
       </div>
 
+      {/* 2. L'Grille dyal l-Parfums */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 md:gap-x-4 gap-y-8 md:gap-y-12">
         {MOCK_PERFUMES.map((perfume) => (
-          <ProductCard key={perfume.id} name={perfume.name} price={perfume.price} image={perfume.image} onOpenDetails={() => { setSelectedProduct(perfume); setIsModalOpen(true); }} />
+          <ProductCard 
+            key={perfume.id} 
+            name={perfume.name} 
+            price={perfume.price} 
+            image={perfume.image} 
+            onOpenDetails={() => handleOpenDetails(perfume)} // Rbtna l-clik hna s7i7
+          />
         ))}
       </div>
 
-      <ProductDetailsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} product={selectedProduct} />
+      {/* 3. L-Modal dyal details */}
+      <ProductDetailsModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        product={selectedProduct} 
+      />
     </section>
   );
 }
